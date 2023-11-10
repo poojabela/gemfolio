@@ -4,26 +4,42 @@
   "sideEffects": false,
   "type": "module",
   "scripts": {
+    "db-pull": "drizzle-kit introspect:pg",
+    "db-push": "drizzle-kit push:pg",
+    "db-studio": "drizzle-kit studio",
     "build": "remix build",
     "dev": "remix dev --manual",
     "start": "remix-serve ./build/index.js",
     "typecheck": "tsc"
   },
   "dependencies": {
+    "@heroicons/react": "^2.0.18",
+    "@react-three/fiber": "^8.15.8",
     "@remix-run/css-bundle": "^2.1.0",
     "@remix-run/node": "^2.1.0",
     "@remix-run/react": "^2.1.0",
     "@remix-run/serve": "^2.1.0",
+    "@supabase/supabase-js": "^2.38.4",
+    "drizzle-orm": "^0.28.6",
+    "is-ip": "^5.0.1",
     "isbot": "^3.6.8",
+    "postgres": "^3.4.2",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "remix-utils": "^7.1.0",
+    "three": "^0.158.0"
   },
   "devDependencies": {
     "@remix-run/dev": "^2.1.0",
     "@remix-run/eslint-config": "^2.1.0",
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
+    "autoprefixer": "^10.4.16",
+    "drizzle-kit": "^0.19.13",
     "eslint": "^8.38.0",
+    "postcss": "^8.4.31",
+    "prettier": "^3.0.3",
+    "tailwindcss": "^3.3.5",
     "typescript": "^5.1.6"
   },
   "engines": {
