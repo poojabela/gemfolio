@@ -62,10 +62,10 @@ export default function Index() {
   return (
     <div className="relative min-h-screen flex flex-col items-stretch justify-start gap-8 py-4 md:py-8 md:gap-16">
       <a
-        href="#form_link"
+        href="https://forms.gle/sjDduv27MMnXattR7"
         target="_blank"
         rel="noreferrer"
-        className="px-3 py-1.5 gap-1.5 flex flex-col items-center justify-center rounded-full shadow-2xl bg-blue-950 z-50 fixed bottom-2 left-0 right-0 w-max font-medium text-sm mx-auto"
+        className="px-3 py-1.5 gap-1.5 flex flex-col items-center justify-center rounded-full shadow-2xl bg-blue-50 text-blue-900 z-50 fixed bottom-2 left-0 right-0 w-max font-medium text-sm md:text-base mx-auto"
       >
         ✨ Submit Yours
       </a>
@@ -73,7 +73,7 @@ export default function Index() {
       <div className="bg-blue-950 py-8 flex flex-col items-center justify-start gap-4 md:gap-8 text-center">
         <h1 className="text-4xl md:text-8xl font-black italic font-serif text-center leading-none">
           <p className="text-2xl">💎</p>
-          GemFolio
+          Gemfolio
         </h1>
         <h2 className="font-semibold text-sm md:text-2xl opacity-75 animate-pulse [text-wrap:_balance]">
           Awesome handpicked portfolios, updated every week.
@@ -107,6 +107,8 @@ export default function Index() {
               src={portfolio.image}
               alt="img"
               className="aspect-video min-w-full h-auto"
+              loading="lazy"
+              decoding="async"
             />
 
             <div className="flex flex-col justify-start items-stretch gap-1 px-2">

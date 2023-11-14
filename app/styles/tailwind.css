@@ -24,8 +24,8 @@
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #e7e7e7;
-  border-radius: 5px;
+  background: hsla(0deg, 0%, 0%, 50%);
+  border-radius: 0px;
   height: 5%;
 }
 
