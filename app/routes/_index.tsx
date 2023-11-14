@@ -99,8 +99,7 @@ export default function Index() {
             target="_blank"
             rel="noreferrer"
             className={[
-              "relative w-full overflow-hidden shadow-2xl bg-blue-950 hover:rotate-0 transition-transform cursor-shovel flex flex-col items-stretch justify-start gap-2 pb-2",
-              i % 2 === 0 ? "md:rotate-3" : "md:-rotate-3",
+              "relative w-full overflow-hidden shadow-2xl bg-blue-950 cursor-shovel flex flex-col items-stretch justify-start gap-2 pb-2",
             ].join(" ")}
           >
             <img
