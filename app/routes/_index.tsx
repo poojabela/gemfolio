@@ -101,7 +101,7 @@ export default function Index() {
         <h2 className="font-semibold text-sm md:text-2xl opacity-75 animate-pulse [text-wrap:_balance]">
           Awesome handpicked portfolios, updated every week.
         </h2>
-        <p className="font-medium text-lg opacity-75">
+        <p className="font-medium text-xs md:text-lg opacity-75">
           Build with 💙 by{" "}
           <a
             href="https://twitter.com/PBelaramani"
