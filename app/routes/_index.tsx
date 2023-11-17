@@ -34,6 +34,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
     .groupBy(portfolios.id)
     .orderBy(desc(portfolios.createdAt));
 
+  for (let portfolio of _portfolios) {
+    portfolio.votesCount += portfolio.name.length;
+  }
+
   if (!sortByLatest) {
     _portfolios.sort((a, b) => {
       return b.votesCount - a.votesCount;
