@@ -41,7 +41,7 @@ export default function App() {
 
         <Links />
       </head>
-      <body className="bg-blue-900 text-white cursor-search">
+      <body className="bg-blue-900 text-white">
         <svg
           className="pointer-events-none fixed isolate z-50 opacity-100 mix-blend-soft-light"
           width="100%"

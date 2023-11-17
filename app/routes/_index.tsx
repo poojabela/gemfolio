@@ -3,29 +3,45 @@ import {
   type LoaderFunctionArgs,
 } from "@remix-run/node";
 
-import { Form, useLoaderData, useNavigation } from "@remix-run/react";
+import {
+  Form,
+  useLoaderData,
+  useNavigation,
+  useSearchParams,
+} from "@remix-run/react";
 import { getClientIPAddress } from "remix-utils/get-client-ip-address";
 
-import { eq, sql } from "drizzle-orm";
+import { desc, eq, sql } from "drizzle-orm";
 import { db } from "~/db/index.server";
 import { portfolios, votes } from "~/db/schema";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   let ip = getClientIPAddress(request.headers) ?? "local";
+  let queryParams = new URL(request.url).searchParams;
+  let sortByLatest = queryParams.get("sort") === "latest";
+
+  let _portfolios = await db
+    .select({
+      id: portfolios.id,
+      name: portfolios.name,
+      url: portfolios.url,
+      image: portfolios.image,
+      votesCount: sql<number>`cast(count(${votes.id}) as int)`,
+      isVoted: sql<boolean>`exists(select 1 from ${votes} where ${votes.ip} = ${ip} and ${votes.portfolioId} = ${portfolios.id})`,
+    })
+    .from(portfolios)
+    .leftJoin(votes, eq(portfolios.id, votes.portfolioId))
+    .groupBy(portfolios.id)
+    .orderBy(desc(portfolios.createdAt));
+
+  if (!sortByLatest) {
+    _portfolios.sort((a, b) => {
+      return b.votesCount - a.votesCount;
+    });
+  }
 
   return {
-    portfolios: await db
-      .select({
-        id: portfolios.id,
-        name: portfolios.name,
-        url: portfolios.url,
-        image: portfolios.image,
-        votesCount: sql<number>`cast(count(${votes.id}) as int)`,
-        isVoted: sql<boolean>`exists(select 1 from ${votes} where ${votes.ip} = ${ip} and ${votes.portfolioId} = ${portfolios.id})`,
-      })
-      .from(portfolios)
-      .leftJoin(votes, eq(portfolios.id, votes.portfolioId))
-      .groupBy(portfolios.id),
+    portfolios: _portfolios,
   };
 }
 
@@ -56,6 +72,9 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function Index() {
   const loaderData = useLoaderData<typeof loader>();
   const portfolios = loaderData.portfolios;
+
+  const [searchParams] = useSearchParams();
+  const sortByLatest = searchParams.get("sort") === "latest";
 
   const isBusy = useNavigation().state !== "idle";
 
@@ -91,6 +110,31 @@ export default function Index() {
         </p>
       </div>
 
+      <div className="flex flex-row items-center justify-center gap-2">
+        <Form className="rounded-full px-2 py-1 bg-white/5 border border-white/5 flex flex-row items-center justify-center gap-2">
+          <fieldset className="contents" disabled={isBusy}>
+            <button
+              className="disabled:opacity-50 data-[active=true]:bg-white/10 text-white py-1 px-2 leading-none text-sm font-medium rounded-full"
+              data-active={!sortByLatest}
+              type="submit"
+              name="sort"
+              value="top"
+            >
+              Top
+            </button>
+            <button
+              className="disabled:opacity-50 data-[active=true]:bg-white/10 text-white py-1 px-2 leading-none text-sm font-medium rounded-full"
+              data-active={sortByLatest}
+              type="submit"
+              name="sort"
+              value="latest"
+            >
+              Latest
+            </button>
+          </fieldset>
+        </Form>
+      </div>
+
       <div className="w-[min(100%,_1024px)] px-4 md:px-8 mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
         {portfolios.map((portfolio, i) => (
           <a
@@ -99,7 +143,7 @@ export default function Index() {
             target="_blank"
             rel="noreferrer"
             className={[
-              "relative w-full overflow-hidden shadow-2xl bg-blue-950 cursor-shovel flex flex-col items-stretch justify-start gap-2 pb-2",
+              "rounded-2xl relative w-full overflow-hidden shadow-2xl bg-blue-950 flex flex-col items-stretch justify-start gap-2 pb-2",
             ].join(" ")}
           >
             <img
@@ -132,12 +176,11 @@ export default function Index() {
                   />
                   <button
                     type="submit"
-                    className={[
-                      "flex gap-1 flex-row justify-center items-center text-sm px-2 py-1 leading-none bg-blue-900 font-semibold disabled:opacity-50",
-                      portfolio.isVoted ? "cursor-unfav" : "cursor-fav",
-                    ].join(" ")}
+                    className={
+                      "flex gap-1 rounded-full flex-row justify-center items-center text-sm px-2 py-1.5 leading-none bg-blue-900 font-semibold disabled:opacity-50"
+                    }
                   >
-                    {portfolio.isVoted ? "🥹 Un-love!" : "🤩 Love!"}
+                    {portfolio.isVoted ? "🥹 Un-vote" : "🤩 Vote"}
                   </button>
                 </fieldset>
               </Form>
