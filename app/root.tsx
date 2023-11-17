@@ -1,4 +1,4 @@
-import type { LinksFunction } from "@remix-run/node";
+import type { LinksFunction, MetaFunction } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -10,6 +10,16 @@ import {
 
 import stylesheet from "~/styles/tailwind.css";
 
+export const meta: MetaFunction = () => [
+  {
+    title: "Gemfolio — Awesome handpicked portfolios",
+  },
+  {
+    name: "description",
+    content: "Awesome handpicked portfolios, updated every week.",
+  },
+];
+
 export const links: LinksFunction = () => [
   {
     rel: "icon",
@@ -20,7 +30,7 @@ export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
 ];
 
-export default function App() {
+export default function Root() {
   return (
     <html lang="en" className="scroll-smooth">
       <head>
